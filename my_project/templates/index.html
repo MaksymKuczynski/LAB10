@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Інтерактивний планувальник подорожей</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1>🌍 Тревел-План</h1>
+            <p>Твій персональний помічник для організації ідеальної подорожі</p>
+        </header>
+
+        <main class="content-grid">
+            <!-- Форма введення даних -->
+            <section class="card form-card">
+                <h2>Параметри поїздки</h2>
+                <form method="POST">
+                    <div class="input-group">
+                        <label for="destination">Пункт призначення:</label>
+                        <input type="text" id="destination" name="destination" value="{{ destination }}" placeholder="Наприклад: Львів, Одеса, Карпати" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="dates">Дати подорожі:</label>
+                        <input type="text" id="dates" name="dates" value="{{ dates }}" placeholder="Наприклад: 10.07.2026 - 15.07.2026" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="budget">Бюджет (грн):</label>
+                        <input type="number" id="budget" name="budget" value="{{ budget }}" placeholder="Наприклад: 15000" required>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Спланувати подорож ✈️</button>
+                </form>
+            </section>
+
+            <!-- Блок результатів -->
+            <section class="card results-card" id="results-section">
+                <h2>Результати планування</h2>
+                {% if recommendations %}
+                    <div class="results-content">
+                        <div class="result-item">
+                            <span class="icon">🚆</span>
+                            <div>
+                                <h3>Оптимальний маршрут</h3>
+                                <p>{{ recommendations.route }}</p>
+                            </div>
+                        </div>
+
+                        <div class="result-item">
+                            <span class="icon">🏨</span>
+                            <div>
+                                <h3>Варіант проживання</h3>
+                                <p>{{ recommendations.accommodation }}</p>
+                            </div>
+                        </div>
+
+                        <div class="result-item">
+                            <span class="icon">🎉</span>
+                            <div>
+                                <h3>Розваги та дозвілля</h3>
+                                <p>{{ recommendations.entertainment }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="placeholder-message">
+                        <p>Введи дані у форму ліворуч та натисни «Спланувати подорож», щоб отримати персональні рекомендації! 🧭</p>
+                    </div>
+                {% endif %}
+            </section>
+        </main>
+    </div>
+
+    <!-- Автоматична прокрутка до результатів, якщо вони є -->
+    {% if recommendations %}
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const resultsCard = document.getElementById('results-section');
+            if (resultsCard) {
+                resultsCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                resultsCard.style.boxShadow = '0 0 20px rgba(79, 70, 229, 0.3)';
+                setTimeout(() => {
+                    resultsCard.style.boxShadow = '';
+                }, 2000);
+            }
+        });
+    </script>
+    {% endif %}
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
