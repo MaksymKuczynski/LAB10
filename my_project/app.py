@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 
-app = Flask(name)
+app = Flask(__name__)
 
 
 def generate_recommendations(destination, budget):
@@ -67,5 +67,5 @@ def index():
     )
 
 
-if name == 'main':
+if __name__ == '__main__':
     app.run(debug=True)
